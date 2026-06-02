@@ -43,6 +43,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Mask for the top safe area (notch) to prevent scroll overlap */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background-color: var(--bg-main);
+  z-index: 9999;
+}
+
 #root {
   display: flex;
   flex-direction: column;

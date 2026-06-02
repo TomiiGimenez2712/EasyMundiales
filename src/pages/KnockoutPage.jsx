@@ -110,7 +110,7 @@ export default function KnockoutPage() {
     <div className="page-container animate-fade-in" style={{ maxWidth: '100%' }}>
       <header className="page-header">
         <div className="header-title-container">
-          <img src="/logo.png" alt="Mundial Logo" className="header-logo" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Mundial Logo" className="header-logo" />
           <h1>Eliminatorias</h1>
         </div>
         <p className="subtitle">Formato Árbol (Desliza horizontalmente)</p>

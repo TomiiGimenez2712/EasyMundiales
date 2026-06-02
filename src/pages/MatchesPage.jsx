@@ -31,7 +31,7 @@ export default function MatchesPage() {
     <div className="page-container animate-fade-in">
       <header className="page-header">
         <div className="header-title-container">
-          <img src="/logo.png" alt="Mundial Logo" className="header-logo" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Mundial Logo" className="header-logo" />
           <h1>Partidos</h1>
         </div>
       </header>

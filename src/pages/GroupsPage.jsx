@@ -38,7 +38,7 @@ export default function GroupsPage() {
     <div className="page-container animate-fade-in">
       <header className="page-header">
         <div className="header-title-container">
-          <img src="/logo.png" alt="Mundial Logo" className="header-logo" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Mundial Logo" className="header-logo" />
           <h1>Grupos</h1>
         </div>
         <p className="subtitle">Fase de Grupos (A-L)</p>

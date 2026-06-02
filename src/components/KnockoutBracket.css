@@ -1,0 +1,132 @@
+.bracket-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 32px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bracket-tree {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  min-width: max-content;
+  padding: 20px;
+  gap: 20px;
+}
+
+.bracket-half {
+  display: flex;
+  gap: 20px;
+}
+
+.bracket-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.final-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-title {
+  color: #d4af37; /* Dorado para la final */
+  font-weight: 800;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.bracket-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 120px;
+}
+
+.column-title {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.column-matches {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex-grow: 1;
+  gap: 16px;
+}
+
+.match-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.bracket-match-box {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.bracket-team-box {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.bracket-team-box:last-child {
+  border-bottom: none;
+}
+
+.bracket-team-box.winner {
+  background-color: rgba(0, 149, 246, 0.15);
+}
+
+.bracket-team-box.winner .bracket-team-abbr {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.bracket-team-abbr {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.bracket-team-score {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+/* Conectores básicos visuales usando bordes (opcional, simplificado) */
+.bracket-half:first-child .bracket-column:not(:last-child) .match-wrapper::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  width: 10px;
+  border-top: 2px solid var(--border-color);
+}
+
+.bracket-half:last-child .bracket-column:not(:first-child) .match-wrapper::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 10px;
+  border-top: 2px solid var(--border-color);
+}

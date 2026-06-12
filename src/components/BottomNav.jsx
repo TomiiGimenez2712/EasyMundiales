@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Calendar, Trophy, GitCommit } from 'lucide-react';
+import { Calendar, Trophy, Award, GitCommit } from 'lucide-react';
 import './BottomNav.css';
 
 export default function BottomNav() {
@@ -12,6 +12,10 @@ export default function BottomNav() {
       <NavLink to="/groups" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
         <Trophy size={24} />
         <span>Grupos</span>
+      </NavLink>
+      <NavLink to="/thirds" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
+        <Award size={24} />
+        <span>Terceros</span>
       </NavLink>
       <NavLink to="/knockout" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
         <GitCommit size={24} />

@@ -1,0 +1,188 @@
+.thirds-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.third-table-container {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.thirds-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 0.85rem;
+  table-layout: fixed;
+}
+
+.col-rank {
+  width: 50px;
+  text-align: center;
+}
+
+.col-group {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* Give proper space to columns */
+.thirds-table th:first-child,
+.thirds-table td:first-child {
+  width: 8%;
+}
+
+.thirds-table th:nth-child(2),
+.thirds-table td:nth-child(2) {
+  width: 32%;
+}
+
+.thirds-table th:nth-child(3),
+.thirds-table td:nth-child(3) {
+  width: 15%;
+}
+
+/* Rank Badge styling */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.badge-qualified {
+  background-color: rgba(37, 211, 102, 0.2);
+  color: var(--accent-success);
+  border: 1px solid rgba(37, 211, 102, 0.4);
+}
+
+.badge-eliminated {
+  background-color: rgba(237, 73, 86, 0.15);
+  color: var(--accent-danger);
+  border: 1px solid rgba(237, 73, 86, 0.3);
+}
+
+/* Row states */
+.third-qualified td {
+  background-color: rgba(37, 211, 102, 0.02);
+}
+
+.third-qualified td:first-child {
+  border-left: 3px solid var(--accent-success);
+}
+
+.third-eliminated td {
+  background-color: rgba(237, 73, 86, 0.01);
+  opacity: 0.8;
+}
+
+.third-eliminated td:first-child {
+  border-left: 3px solid var(--accent-danger);
+}
+
+/* FIFA Rules explanation card */
+.rules-card {
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(28, 28, 30, 0.7) 100%);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.rules-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.rules-card-header h3 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.rules-icon {
+  color: var(--accent-primary);
+}
+
+.rules-intro {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.rules-list {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rules-list li {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.rule-title {
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-right: 4px;
+}
+
+/* Spinner loader styling */
+.loading-spinner {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading-spinner::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile responsive columns hiding */
+@media (max-width: 480px) {
+  /* Hiding GP, W, D, L, GF, GA columns */
+  .thirds-table th:nth-child(5), .thirds-table td:nth-child(5), /* PJ */
+  .thirds-table th:nth-child(6), .thirds-table td:nth-child(6), /* G */
+  .thirds-table th:nth-child(7), .thirds-table td:nth-child(7), /* E */
+  .thirds-table th:nth-child(8), .thirds-table td:nth-child(8), /* P */
+  .thirds-table th:nth-child(9), .thirds-table td:nth-child(9), /* GF */
+  .thirds-table th:nth-child(10), .thirds-table td:nth-child(10) /* GC */ {
+    display: none;
+  }
+  
+  .thirds-table th:nth-child(2), .thirds-table td:nth-child(2) {
+    width: 50%;
+  }
+
+  .thirds-table th:nth-child(3), .thirds-table td:nth-child(3) {
+    width: 25%;
+  }
+}

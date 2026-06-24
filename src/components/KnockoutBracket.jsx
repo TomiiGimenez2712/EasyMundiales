@@ -3,11 +3,21 @@ import './KnockoutBracket.css';
 const MatchBox = ({ match }) => (
   <div className="bracket-match-box">
     <div className={`bracket-team-box ${match.team1.winner ? 'winner' : ''}`}>
-      <span className="bracket-team-abbr">{match.team1.abbreviation}</span>
+      <div className="bracket-team-info">
+        {match.team1.logo && (
+          <img src={match.team1.logo} alt={match.team1.name} className="bracket-team-logo" />
+        )}
+        <span className="bracket-team-abbr">{match.team1.abbreviation}</span>
+      </div>
       <span className="bracket-team-score">{match.status !== 'pre' ? match.team1.score : '-'}</span>
     </div>
     <div className={`bracket-team-box ${match.team2.winner ? 'winner' : ''}`}>
-      <span className="bracket-team-abbr">{match.team2.abbreviation}</span>
+      <div className="bracket-team-info">
+        {match.team2.logo && (
+          <img src={match.team2.logo} alt={match.team2.name} className="bracket-team-logo" />
+        )}
+        <span className="bracket-team-abbr">{match.team2.abbreviation}</span>
+      </div>
       <span className="bracket-team-score">{match.status !== 'pre' ? match.team2.score : '-'}</span>
     </div>
   </div>

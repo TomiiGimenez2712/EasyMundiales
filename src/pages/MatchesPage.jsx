@@ -1,31 +1,9 @@
-import { useEffect, useState } from 'react';
-import { fetchMatches } from '../services/api';
+import { useTournament } from '../context/TournamentContext';
 import MatchCard from '../components/MatchCard';
 import './Pages.css';
 
 export default function MatchesPage() {
-  const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-    const loadMatches = async () => {
-      const data = await fetchMatches();
-      if (isMounted) {
-        setMatches(data);
-        setLoading(false);
-      }
-    };
-
-    loadMatches();
-    // Poll every 60 seconds
-    const intervalId = setInterval(loadMatches, 60000);
-
-    return () => {
-      isMounted = false;
-      clearInterval(intervalId);
-    };
-  }, []);
+  const { matches, loading } = useTournament();
 
   return (
     <div className="page-container animate-fade-in">

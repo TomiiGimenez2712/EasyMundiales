@@ -1,63 +1,35 @@
-import { useState, useEffect } from 'react';
-import { fetchStandings } from '../services/api';
+import { useTournament } from '../context/TournamentContext';
 import { Info, HelpCircle } from 'lucide-react';
 import './Pages.css';
 import './ThirdPlacesPage.css';
 
 export default function ThirdPlacesPage() {
-  const [thirds, setThirds] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { standings, loading, error } = useTournament();
 
-  useEffect(() => {
-    const loadThirds = async () => {
-      try {
-        const standings = await fetchStandings();
-        if (standings && standings.length > 0) {
-          // Extraer el tercer equipo de cada grupo (índice 2)
-          const extractedThirds = standings
-            .map(group => {
-              if (group.teams && group.teams.length >= 3) {
-                return {
-                  ...group.teams[2],
-                  groupName: group.name
-                };
-              }
-              return null;
-            })
-            .filter(Boolean);
-
-          // Ordenar según reglas FIFA:
-          // 1. Puntos (PTS)
-          // 2. Diferencia de Goles (DIF)
-          // 3. Goles a Favor (GF)
-          // 4. Victorias (G)
-          extractedThirds.sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
-            if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
-            if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
-            return b.won - a.won;
-          });
-
-          setThirds(extractedThirds);
-          setError(null);
-        } else {
-          if (thirds.length === 0) setError("Los datos de los grupos aún no están disponibles.");
-        }
-      } catch (err) {
-        console.error("Failed to load third places", err);
-        if (thirds.length === 0) setError("Error al cargar la tabla de mejores terceros.");
-      } finally {
-        setLoading(false);
+  // Extraer y ordenar el tercer equipo de cada grupo de forma reactiva
+  const thirds = standings
+    .map(group => {
+      if (group.teams && group.teams.length >= 3) {
+        return {
+          ...group.teams[2],
+          groupName: group.name
+        };
       }
-    };
+      return null;
+    })
+    .filter(Boolean);
 
-    loadThirds();
-
-    // Auto-actualizar cada 2 minutos
-    const interval = setInterval(loadThirds, 120000);
-    return () => clearInterval(interval);
-  }, []);
+  // Ordenar según reglas FIFA:
+  // 1. Puntos (PTS)
+  // 2. Diferencia de Goles (DIF)
+  // 3. Goles a Favor (GF)
+  // 4. Victorias (G)
+  thirds.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+    if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+    return b.won - a.won;
+  });
 
   return (
     <div className="page-container animate-fade-in">

@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
 import KnockoutBracket from '../components/KnockoutBracket';
-import { fetchMatches } from '../services/api';
+import { useTournament } from '../context/TournamentContext';
 import './Pages.css';
 
 const generateMatches = (count, side) => {
@@ -39,72 +38,54 @@ const initialFinalMatch = {
 };
 
 export default function KnockoutPage() {
-  const [leftBracket, setLeftBracket] = useState(initialLeftBracket);
-  const [rightBracket, setRightBracket] = useState(initialRightBracket);
-  const [finalMatch, setFinalMatch] = useState(initialFinalMatch);
-  const [loading, setLoading] = useState(true);
+  const { matches, loading } = useTournament();
 
-  useEffect(() => {
-    const loadKnockouts = async () => {
-      try {
-        const matches = await fetchMatches();
-        if (!matches || matches.length === 0) return;
+  // Clonar estados iniciales para rellenarlos
+  const leftBracket = JSON.parse(JSON.stringify(initialLeftBracket));
+  const rightBracket = JSON.parse(JSON.stringify(initialRightBracket));
+  let finalMatch = JSON.parse(JSON.stringify(initialFinalMatch));
 
-        // Filtrar solo partidos de fase eliminatoria (basado en nombre o nota de ESPN)
-        // ESPN suele usar "Round of 32", "Round of 16", "Quarterfinal", "Semifinal", "Final"
-        const koMatches = matches.filter(m => {
-          const text = (m.name + ' ' + (m.note || '') + ' ' + (m.stage || '')).toLowerCase();
-          return text.includes('round of 32') || text.includes('round of 16') || text.includes('quarterfinal') || text.includes('semifinal') || text.includes('final') || text.includes('knockout');
-        });
+  // Filtrar solo partidos de fase eliminatoria usando los stages del API
+  const koStages = ['round-of-32', 'round-of-16', 'quarterfinals', 'semifinals', 'final'];
+  const koMatches = matches.filter(m => koStages.includes(m.stage));
 
-        if (koMatches.length === 0) return; // Si no hay (torneo temprano), se queda en TBD.
+  if (koMatches.length > 0) {
+    // Separar por rondas
+    const r32 = koMatches.filter(m => m.stage === 'round-of-32');
+    const r16 = koMatches.filter(m => m.stage === 'round-of-16');
+    const rqf = koMatches.filter(m => m.stage === 'quarterfinals');
+    const rsf = koMatches.filter(m => m.stage === 'semifinals');
+    const rf = koMatches.filter(m => m.stage === 'final');
 
-        // Clonar estados iniciales para rellenarlos
-        const newLeft = JSON.parse(JSON.stringify(initialLeftBracket));
-        const newRight = JSON.parse(JSON.stringify(initialRightBracket));
-        let newFinal = JSON.parse(JSON.stringify(initialFinalMatch));
-
-        // Separar por rondas
-        const r32 = koMatches.filter(m => m.name.toLowerCase().includes('32') || m.note?.toLowerCase().includes('32'));
-        const r16 = koMatches.filter(m => m.name.toLowerCase().includes('16') || m.note?.toLowerCase().includes('16'));
-        const rqf = koMatches.filter(m => m.name.toLowerCase().includes('quarter') || m.note?.toLowerCase().includes('quarter'));
-        const rsf = koMatches.filter(m => m.name.toLowerCase().includes('semi') || m.note?.toLowerCase().includes('semi'));
-        const rf = koMatches.filter(m => m.name.toLowerCase() === 'final' || m.note?.toLowerCase() === 'final');
-
-        // Función para inyectar partidos en la mitad izquierda o derecha (mitad y mitad)
-        const inject = (sourceArr, leftArr, rightArr) => {
-          sourceArr.forEach((match, index) => {
-            if (index < leftArr.length) {
-              leftArr[index] = { ...match, side: 'left' };
-            } else if (index - leftArr.length < rightArr.length) {
-              rightArr[index - leftArr.length] = { ...match, side: 'right' };
-            }
-          });
-        };
-
-        inject(r32, newLeft.round16, newRight.round16); // 16avos (Round of 32)
-        inject(r16, newLeft.round8, newRight.round8);   // Octavos (Round of 16)
-        inject(rqf, newLeft.round4, newRight.round4);   // Cuartos
-        inject(rsf, newLeft.round2, newRight.round2);   // Semis
-
-        if (rf.length > 0) {
-          newFinal = { ...rf[0], side: 'center' };
+    // Función para inyectar partidos en la mitad izquierda o derecha (mitad y mitad)
+    const inject = (sourceArr, leftArr, rightArr) => {
+      sourceArr.forEach((match, index) => {
+        if (index < leftArr.length) {
+          leftArr[index] = { ...match, side: 'left' };
+        } else if (index - leftArr.length < rightArr.length) {
+          rightArr[index - leftArr.length] = { ...match, side: 'right' };
         }
-
-        setLeftBracket(newLeft);
-        setRightBracket(newRight);
-        setFinalMatch(newFinal);
-      } catch (error) {
-        console.error("Error cargando eliminatorias:", error);
-      } finally {
-        setLoading(false);
-      }
+      });
     };
 
-    loadKnockouts();
-    const interval = setInterval(loadKnockouts, 120000);
-    return () => clearInterval(interval);
-  }, []);
+    // Inyectar 16avos (Round of 32) y Octavos (Round of 16)
+    inject(r32, leftBracket.round16, rightBracket.round16);
+    inject(r16, leftBracket.round8, rightBracket.round8);
+
+    // Inyectar Cuartos alineados correctamente al árbol visual
+    if (rqf.length > 0) leftBracket.round4[0] = { ...rqf[0], side: 'left' };
+    if (rqf.length > 1) rightBracket.round4[0] = { ...rqf[1], side: 'right' };
+    if (rqf.length > 2) leftBracket.round4[1] = { ...rqf[2], side: 'left' };
+    if (rqf.length > 3) rightBracket.round4[1] = { ...rqf[3], side: 'right' };
+
+    // Inyectar Semis alineadas correctamente al árbol visual
+    if (rsf.length > 0) leftBracket.round2[0] = { ...rsf[0], side: 'left' };
+    if (rsf.length > 1) rightBracket.round2[0] = { ...rsf[1], side: 'right' };
+
+    if (rf.length > 0) {
+      finalMatch = { ...rf[0], side: 'center' };
+    }
+  }
 
   return (
     <div className="page-container animate-fade-in" style={{ maxWidth: '100%' }}>
@@ -116,7 +97,11 @@ export default function KnockoutPage() {
         <p className="subtitle">Formato Árbol (Desliza horizontalmente)</p>
       </header>
       <div className="knockout-content">
-        <KnockoutBracket left={leftBracket} right={rightBracket} final={finalMatch} />
+        {loading && koMatches.length === 0 ? (
+          <div className="loading-spinner">Cargando eliminatorias...</div>
+        ) : (
+          <KnockoutBracket left={leftBracket} right={rightBracket} final={finalMatch} />
+        )}
       </div>
     </div>
   );

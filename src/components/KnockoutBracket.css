@@ -59,15 +59,17 @@
 .column-matches {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   flex-grow: 1;
-  gap: 16px;
+  gap: 0;
 }
 
 .match-wrapper {
   display: flex;
   align-items: center;
   position: relative;
+  flex: 1;
+  padding: 10px 0;
 }
 
 .bracket-match-box {
@@ -128,21 +130,102 @@
   font-weight: 700;
 }
 
-/* Conectores básicos visuales usando bordes (opcional, simplificado) */
-.bracket-half:first-child .bracket-column:not(:last-child) .match-wrapper::after {
+/* LADO IZQUIERDO */
+/* 1. Forma ] en partidos impares para columnas que no son la última (Semifinal) */
+.bracket-half:first-child .bracket-column:not(:last-child) .match-wrapper:nth-child(odd)::after {
   content: '';
   position: absolute;
   right: -10px;
   top: 50%;
   width: 10px;
+  height: 100%;
   border-top: 2px solid var(--border-color);
+  border-right: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  z-index: 0;
 }
 
-.bracket-half:last-child .bracket-column:not(:first-child) .match-wrapper::before {
+/* 2. Línea horizontal de recepción para las columnas siguientes */
+.bracket-half:first-child .bracket-column:not(:first-child) .match-wrapper::before {
   content: '';
   position: absolute;
   left: -10px;
   top: 50%;
   width: 10px;
   border-top: 2px solid var(--border-color);
+  z-index: 0;
+}
+
+/* LADO DERECHO */
+/* 1. Forma [ en partidos impares para columnas que no son la primera (Semifinal) */
+.bracket-half:last-child .bracket-column:not(:first-child) .match-wrapper:nth-child(odd)::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 10px;
+  height: 100%;
+  border-top: 2px solid var(--border-color);
+  border-left: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  z-index: 0;
+}
+
+/* 2. Línea horizontal de recepción para las columnas anteriores (siguientes en flujo de torneo) */
+.bracket-half:last-child .bracket-column:not(:last-child) .match-wrapper::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  width: 10px;
+  border-top: 2px solid var(--border-color);
+  z-index: 0;
+}
+
+/* CONEXIÓN AL CENTRO (FINAL) */
+/* Semifinal Izquierda hacia el centro */
+.bracket-half:first-child .bracket-column:last-child .match-wrapper::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  width: 20px;
+  border-top: 2px solid var(--border-color);
+  z-index: 0;
+}
+
+/* Semifinal Derecha hacia el centro */
+.bracket-half:last-child .bracket-column:first-child .match-wrapper::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  width: 20px;
+  border-top: 2px solid var(--border-color);
+  z-index: 0;
+}
+
+/* Partido Final recibiendo de ambos lados */
+.bracket-center .match-wrapper::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  width: 20px;
+  border-top: 2px solid var(--border-color);
+  z-index: 0;
+}
+
+.bracket-center .match-wrapper::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  width: 20px;
+  border-top: 2px solid var(--border-color);
+  z-index: 0;
 }

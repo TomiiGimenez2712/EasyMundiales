@@ -57,30 +57,30 @@ export default function KnockoutPage() {
     const rsf = koMatches.filter(m => m.stage === 'semifinals');
     const rf = koMatches.filter(m => m.stage === 'final');
 
-    // Función para inyectar partidos en la mitad izquierda o derecha (mitad y mitad)
-    const inject = (sourceArr, leftArr, rightArr) => {
-      sourceArr.forEach((match, index) => {
-        if (index < leftArr.length) {
-          leftArr[index] = { ...match, side: 'left' };
-        } else if (index - leftArr.length < rightArr.length) {
-          rightArr[index - leftArr.length] = { ...match, side: 'right' };
+    // Función para mapear los partidos usando un arreglo de índices específicos
+    const mapMatches = (sourceArr, targetArr, indices, side) => {
+      indices.forEach((sourceIdx, targetIdx) => {
+        if (sourceArr[sourceIdx]) {
+          targetArr[targetIdx] = { ...sourceArr[sourceIdx], side };
         }
       });
     };
 
-    // Inyectar 16avos (Round of 32) y Octavos (Round of 16)
-    inject(r32, leftBracket.round16, rightBracket.round16);
-    inject(r16, leftBracket.round8, rightBracket.round8);
+    // Inyectar 16avos (Round of 32)
+    mapMatches(r32, leftBracket.round16, [0, 2, 1, 4, 10, 11, 8, 9], 'left');
+    mapMatches(r32, rightBracket.round16, [3, 5, 6, 7, 13, 15, 12, 14], 'right');
 
-    // Inyectar Cuartos alineados correctamente al árbol visual
-    if (rqf.length > 0) leftBracket.round4[0] = { ...rqf[0], side: 'left' };
-    if (rqf.length > 1) rightBracket.round4[0] = { ...rqf[1], side: 'right' };
-    if (rqf.length > 2) leftBracket.round4[1] = { ...rqf[2], side: 'left' };
-    if (rqf.length > 3) rightBracket.round4[1] = { ...rqf[3], side: 'right' };
+    // Inyectar Octavos (Round of 16)
+    mapMatches(r16, leftBracket.round8, [0, 1, 4, 5], 'left');
+    mapMatches(r16, rightBracket.round8, [2, 3, 6, 7], 'right');
 
-    // Inyectar Semis alineadas correctamente al árbol visual
-    if (rsf.length > 0) leftBracket.round2[0] = { ...rsf[0], side: 'left' };
-    if (rsf.length > 1) rightBracket.round2[0] = { ...rsf[1], side: 'right' };
+    // Inyectar Cuartos (Quarterfinals)
+    mapMatches(rqf, leftBracket.round4, [0, 1], 'left');
+    mapMatches(rqf, rightBracket.round4, [2, 3], 'right');
+
+    // Inyectar Semis (Semifinals)
+    mapMatches(rsf, leftBracket.round2, [0], 'left');
+    mapMatches(rsf, rightBracket.round2, [1], 'right');
 
     if (rf.length > 0) {
       finalMatch = { ...rf[0], side: 'center' };

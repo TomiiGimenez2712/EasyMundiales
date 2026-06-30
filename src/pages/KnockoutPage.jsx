@@ -67,8 +67,8 @@ export default function KnockoutPage() {
     };
 
     // Inyectar 16avos (Round of 32)
-    mapMatches(r32, leftBracket.round16, [0, 2, 1, 4, 10, 11, 8, 9], 'left');
-    mapMatches(r32, rightBracket.round16, [3, 5, 6, 7, 13, 15, 12, 14], 'right');
+    mapMatches(r32, leftBracket.round16, [0, 3, 2, 4, 10, 11, 8, 9], 'left');
+    mapMatches(r32, rightBracket.round16, [1, 5, 6, 7, 13, 15, 12, 14], 'right');
 
     // Inyectar Octavos (Round of 16)
     mapMatches(r16, leftBracket.round8, [0, 1, 4, 5], 'left');
